@@ -99,20 +99,18 @@ export default function LoginScreen() {
           className="flex-1"
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+          keyboardDismissMode={
+            Platform.OS === "ios" ? "interactive" : "on-drag"
+          }
         >
           <View className="flex-1 items-center justify-center px-6 py-10">
             <View className="w-full max-w-[440px] rounded-[28px] border border-black/5 bg-mist p-6 shadow-card">
-              <View className="gap-3">
-                <Text className="text-xs font-semibold uppercase tracking-[3px] text-primary">
-                  Budget Tracking
+              <View className="gap-1">
+                <Text className="text-4xl font-bold tracking-[8px] uppercase  text-primary text-center">
+                  Gastos
                 </Text>
-                <Text className="text-4xl font-black leading-tight text-ink">
-                  Log in to Gastos
-                </Text>
-                <Text className="text-base leading-6 text-ink/70">
-                  Use your existing Supabase auth account to access your budgets,
-                  categories, and transactions.
+                <Text className="text-base leading-6 text-ink/70 text-center">
+                  Finance tracking made easy
                 </Text>
               </View>
 
@@ -164,7 +162,10 @@ export default function LoginScreen() {
                 </View>
 
                 {errorMessage ? (
-                  <Text selectable className="rounded-2xl bg-danger/10 p-4 text-sm text-danger">
+                  <Text
+                    selectable
+                    className="rounded-2xl bg-danger/10 p-4 text-sm text-danger"
+                  >
                     {errorMessage}
                   </Text>
                 ) : null}
@@ -196,7 +197,9 @@ export default function LoginScreen() {
                   <View className="flex-row items-center justify-center gap-2">
                     <AntDesign name="google" size={18} color="#4285F4" />
                     <Text className="text-base font-bold text-ink">
-                      {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
+                      {isGoogleLoading
+                        ? "Opening Google..."
+                        : "Continue with Google"}
                     </Text>
                   </View>
                 </Button>
