@@ -13,6 +13,7 @@ import {
 
 import { signInWithGoogle, signInWithPassword } from "@/src/lib/auth";
 import { useSession } from "@/src/providers/session-provider";
+import { Button } from "@/src/ui/button";
 import { TextField } from "@/src/ui/text-field";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -23,6 +24,7 @@ export default function LoginScreen() {
   const { session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPasswordLoading, setIsPasswordLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -125,15 +127,33 @@ export default function LoginScreen() {
                 <Text className="text-sm font-semibold text-ink">
                   Password
                 </Text>
-                <TextField
-                  autoCapitalize="none"
-                  autoComplete="password"
-                  onChangeText={setPassword}
-                  placeholder="Your password"
-                  placeholderTextColor="#6b7280"
-                  secureTextEntry
-                  value={password}
-                />
+                <View className="relative">
+                  <TextField
+                    autoCapitalize="none"
+                    autoComplete="password"
+                    onChangeText={setPassword}
+                    placeholder="Your password"
+                    placeholderTextColor="#6b7280"
+                    secureTextEntry={!isPasswordVisible}
+                    value={password}
+                    className="pr-12"
+                  />
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isPasswordVisible ? "Hide password" : "Show password"
+                    }
+                    hitSlop={8}
+                    onPress={() => setIsPasswordVisible((value) => !value)}
+                    className="absolute bottom-0 right-4 top-0 justify-center"
+                  >
+                    <AntDesign
+                      name={isPasswordVisible ? "eye" : "eye-invisible"}
+                      size={18}
+                      color="#6b7280"
+                    />
+                  </Pressable>
+                </View>
               </View>
 
               {errorMessage ? (
@@ -142,18 +162,14 @@ export default function LoginScreen() {
                 </Text>
               ) : null}
 
-              <Pressable
-                accessibilityRole="button"
+              <Button
                 disabled={isDisabled}
+                isLoading={isPasswordLoading}
                 onPress={handlePasswordLogin}
-                className={`rounded-2xl px-4 py-4 ${
-                  isDisabled ? "bg-primary/50" : "bg-primary"
-                }`}
-              >
-                <Text className="text-center text-base font-bold text-white">
-                  {isPasswordLoading ? "Signing in..." : "Log in"}
-                </Text>
-              </Pressable>
+                size="lg"
+                variant="primary"
+                label={isPasswordLoading ? "Signing in..." : "Log in"}
+              />
 
               <View className="flex-row items-center gap-3">
                 <View className="h-px flex-1 bg-black/10" />
@@ -163,11 +179,12 @@ export default function LoginScreen() {
                 <View className="h-px flex-1 bg-black/10" />
               </View>
 
-              <Pressable
-                accessibilityRole="button"
+              <Button
                 disabled={isPasswordLoading || isGoogleLoading}
+                isLoading={isGoogleLoading}
                 onPress={handleGoogleLogin}
-                className="rounded-2xl border border-ink/10 bg-white px-4 py-4"
+                size="lg"
+                variant="outline"
               >
                 <View className="flex-row items-center justify-center gap-2">
                   <AntDesign name="google" size={18} color="#4285F4" />
@@ -175,7 +192,7 @@ export default function LoginScreen() {
                     {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
                   </Text>
                 </View>
-              </Pressable>
+              </Button>
             </View>
           </View>
         </View>

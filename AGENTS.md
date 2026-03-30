@@ -13,7 +13,8 @@ This file defines coding preferences for AI assistants working in this repo.
 
 - Use shared UI primitives from `src/ui` whenever available.
 - For text inputs, use `TextField` from `src/ui/text-field.tsx` instead of raw `TextInput` in app screens.
-- Keep styling consistent by reusing shared classes (for example, `input-field` in `global.css`).
+- For buttons/actions, use `Button` from `src/ui/button.tsx` and size props for consistency.
+- Keep styling consistent by using primitive-owned defaults, then extend only when needed.
 - Only add platform-specific overrides inside shared primitives, not per-screen.
 
 ## Code Organization

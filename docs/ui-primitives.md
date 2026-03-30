@@ -14,7 +14,7 @@ This project prefers shared primitives over one-off UI implementations.
 - Use `TextField` from `src/ui/text-field.tsx` for form inputs.
 - Do not use raw `TextInput` directly in app screens unless there is a justified exception.
 - `TextField` centralizes:
-  - shared visual style (`input-field` in `global.css`)
+  - shared visual style defaults (inside the component)
   - cross-platform text rendering/alignment behavior
 
 Example:
@@ -39,3 +39,34 @@ Create a reusable component/function when:
 - Reuse improves consistency and reduces maintenance cost.
 
 Keep primitives focused, small, and easy to understand.
+
+## Buttons
+
+- Use `Button` from `src/ui/button.tsx` for tappable actions.
+- Prefer `size` props for consistent sizing across screens.
+- Use `isLoading` for pending actions. It disables the button and shows a spinner before content.
+- Supported sizes:
+  - `xl`
+  - `lg`
+  - `md`
+  - `sm`
+- Supported variants:
+  - `primary`
+  - `secondary`
+  - `warning`
+  - `outline`
+  - `ink`
+
+Example:
+
+```tsx
+import { Button } from "@/src/ui/button";
+
+<Button
+  size="lg"
+  variant="primary"
+  label="Save"
+  isLoading={isSaving}
+  onPress={handleSave}
+/>;
+```

@@ -1,8 +1,9 @@
 import { Stack } from "expo-router";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 import { signOut } from "@/src/lib/auth";
 import { useSession } from "@/src/providers/session-provider";
+import { Button } from "@/src/ui/button";
 
 export default function HomeScreen() {
   const { session } = useSession();
@@ -31,15 +32,7 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        <Pressable
-          accessibilityRole="button"
-          onPress={signOut}
-          className="rounded-2xl bg-ink px-4 py-4"
-        >
-          <Text className="text-center text-base font-bold text-white">
-            Sign out
-          </Text>
-        </Pressable>
+        <Button onPress={signOut} size="lg" variant="ink" label="Sign out" />
       </ScrollView>
     </>
   );

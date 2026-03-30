@@ -32,12 +32,15 @@ type TextFieldProps = TextInputProps & {
   className?: string;
 };
 
+const BASE_INPUT_CLASSNAME =
+  "h-14 rounded-2xl border border-black/10 bg-white px-4 py-0 text-ink";
+
 export const TextField = forwardRef<TextInput, TextFieldProps>(
   ({ className, style, ...props }, ref) => {
     const mergedStyle: StyleProp<TextStyle> = [BASE_INPUT_STYLE, style];
     const mergedClassName = className
-      ? `input-field ${className}`.trim()
-      : "input-field";
+      ? `${BASE_INPUT_CLASSNAME} ${className}`.trim()
+      : BASE_INPUT_CLASSNAME;
 
     return (
       <TextInput
