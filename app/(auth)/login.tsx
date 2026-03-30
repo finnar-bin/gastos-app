@@ -1,4 +1,5 @@
 import * as AuthSession from "expo-auth-session";
+import { AntDesign } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import { Redirect, Stack, router } from "expo-router";
 import { useState } from "react";
@@ -166,9 +167,12 @@ export default function LoginScreen() {
                 onPress={handleGoogleLogin}
                 className="rounded-2xl border border-ink/10 bg-white px-4 py-4"
               >
-                <Text className="text-center text-base font-bold text-ink">
-                  {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
-                </Text>
+                <View className="flex-row items-center justify-center gap-2">
+                  <AntDesign name="google" size={18} color="#4285F4" />
+                  <Text className="text-base font-bold text-ink">
+                    {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
+                  </Text>
+                </View>
               </Pressable>
             </View>
           </View>
