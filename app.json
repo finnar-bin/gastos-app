@@ -30,6 +30,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3ca92350-980e-450d-bf28-8ee19dea3a27"
+      }
+    },
+    "owner": "thatguynar"
   }
 }
