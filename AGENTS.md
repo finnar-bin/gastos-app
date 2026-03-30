@@ -23,6 +23,16 @@ This file defines coding preferences for AI assistants working in this repo.
 - Keep screen files focused on composition and flow, not duplicated implementation details.
 - Prefer small abstractions with clear names over many ad-hoc inline blocks.
 
+## State Management
+
+- Separate server state from client/UI state.
+- Use TanStack Query for Supabase-backed server state (fetching, caching, invalidation, optimistic updates).
+- Do not use TanStack Query as a general UI state store.
+- Prefer local `useState`/`useReducer` first for client/UI state.
+- Use Context for lightweight shared client state.
+- Introduce Zustand only when client/UI state becomes complex across multiple screens.
+
 ## Documentation
 
 - If you introduce a new reusable primitive, document it in `docs/ui-primitives.md`.
+- Follow and update `docs/state-management.md` for state patterns and boundaries.
