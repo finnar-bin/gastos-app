@@ -17,6 +17,8 @@ import { useSession } from "@/src/providers/session-provider";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const NATIVE_AUTH_REDIRECT = "gastosapp://auth/callback";
+
 export default function LoginScreen() {
   const { session } = useSession();
   const [email, setEmail] = useState("");
@@ -50,10 +52,12 @@ export default function LoginScreen() {
     setIsGoogleLoading(true);
 
     try {
-      const redirectTo = AuthSession.makeRedirectUri({
-        scheme: "gastosapp",
-        path: "auth/callback",
-      });
+      const redirectTo =
+        Platform.OS === "web"
+          ? AuthSession.makeRedirectUri({
+              path: "auth/callback",
+            })
+          : NATIVE_AUTH_REDIRECT;
 
       await signInWithGoogle({
         openAuthSession: async (url) => {

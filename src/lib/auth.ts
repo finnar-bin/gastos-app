@@ -43,7 +43,6 @@ export async function signInWithGoogle({
   redirectTo,
   openAuthSession,
 }: GoogleSignInOptions) {
-  console.log("redirectTO", redirectTo);
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
