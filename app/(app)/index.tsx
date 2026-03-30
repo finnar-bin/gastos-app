@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
-import { signOut } from "@/src/lib/auth";
+import { signOut } from "@/src/lib/auth-requests";
 import { useSession } from "@/src/providers/session-provider";
 import { Button } from "@/src/ui/button";
 

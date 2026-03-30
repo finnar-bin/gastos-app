@@ -1,5 +1,6 @@
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const authRedirectUrl = process.env.EXPO_PUBLIC_AUTH_REDIRECT_URL;
 
 function invariant(value: string | undefined, label: string) {
   if (!value) {
@@ -14,4 +15,5 @@ function invariant(value: string | undefined, label: string) {
 export const env = {
   supabaseUrl: invariant(supabaseUrl, "EXPO_PUBLIC_SUPABASE_URL"),
   supabaseAnonKey: invariant(supabaseAnonKey, "EXPO_PUBLIC_SUPABASE_ANON_KEY"),
+  authRedirectUrl,
 };

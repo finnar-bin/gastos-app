@@ -1,4 +1,3 @@
-import * as AuthSession from "expo-auth-session";
 import { AntDesign } from "@expo/vector-icons";
 import * as WebBrowser from "expo-web-browser";
 import { Redirect, Stack, router } from "expo-router";
@@ -12,14 +11,13 @@ import {
   View,
 } from "react-native";
 
-import { signInWithGoogle, signInWithPassword } from "@/src/lib/auth";
+import { signInWithGoogle, signInWithPassword } from "@/src/lib/auth-requests";
+import { getAuthRedirectUrl } from "@/src/lib/auth-utils";
 import { useSession } from "@/src/providers/session-provider";
 import { Button } from "@/src/ui/button";
 import { TextField } from "@/src/ui/text-field";
 
 WebBrowser.maybeCompleteAuthSession();
-
-const NATIVE_AUTH_REDIRECT = "gastosapp://auth/callback";
 
 export default function LoginScreen() {
   const { session } = useSession();
@@ -55,12 +53,7 @@ export default function LoginScreen() {
     setIsGoogleLoading(true);
 
     try {
-      const redirectTo =
-        Platform.OS === "web"
-          ? AuthSession.makeRedirectUri({
-              path: "auth/callback",
-            })
-          : NATIVE_AUTH_REDIRECT;
+      const redirectTo = getAuthRedirectUrl();
 
       await signInWithGoogle({
         openAuthSession: async (url) => {
@@ -203,6 +196,17 @@ export default function LoginScreen() {
                     </Text>
                   </View>
                 </Button>
+
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => router.replace("/(auth)/signup")}
+                  className="items-center py-1"
+                >
+                  <Text className="text-sm text-ink/70">
+                    No account yet?{" "}
+                    <Text className="font-semibold text-primary">Sign up</Text>
+                  </Text>
+                </Pressable>
               </View>
             </View>
           </View>

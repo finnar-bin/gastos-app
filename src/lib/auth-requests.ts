@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 
 import { supabase } from "@/src/lib/supabase";
+import { sanitizeDisplayName } from "@/src/lib/auth-utils";
 
 type AuthResult =
   | { type: "success"; url: string | null }
@@ -14,6 +15,13 @@ type GoogleSignInOptions = {
   openAuthSession: (url: string) => Promise<AuthResult>;
 };
 
+type SignUpPayload = {
+  displayName: string;
+  email: string;
+  password: string;
+  emailRedirectTo: string;
+};
+
 export async function signInWithPassword(email: string, password: string) {
   const { error } = await supabase.auth.signInWithPassword({
     email: email.trim(),
@@ -23,6 +31,32 @@ export async function signInWithPassword(email: string, password: string) {
   if (error) {
     throw error;
   }
+}
+
+export async function signUpWithPassword({
+  displayName,
+  email,
+  password,
+  emailRedirectTo,
+}: SignUpPayload) {
+  const cleanedDisplayName = sanitizeDisplayName(displayName);
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim().toLowerCase(),
+    password,
+    options: {
+      emailRedirectTo,
+      data: {
+        display_name: cleanedDisplayName,
+      },
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
 }
 
 function readTokensFromUrl(url: string) {
