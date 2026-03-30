@@ -32,7 +32,15 @@ This file defines coding preferences for AI assistants working in this repo.
 - Use Context for lightweight shared client state.
 - Introduce Zustand only when client/UI state becomes complex across multiple screens.
 
+## Offline Phase Gate
+
+- Before implementing any offline-related change, map it to a phase in `docs/offline-strategy.md`.
+- Current active phase is **Phase 1** (started March 30, 2026).
+- Do not implement Phase 2 or Phase 3 behavior unless explicitly requested by the user.
+- Keep changes phase-scoped: avoid adding mutation queue/conflict logic while Phase 1 is active.
+
 ## Documentation
 
 - If you introduce a new reusable primitive, document it in `docs/ui-primitives.md`.
 - Follow and update `docs/state-management.md` for state patterns and boundaries.
+- Follow and update `docs/offline-strategy.md` for offline behavior and sync rules.
