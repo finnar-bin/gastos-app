@@ -8,12 +8,12 @@ import {
   Platform,
   Pressable,
   Text,
-  TextInput,
   View,
 } from "react-native";
 
 import { signInWithGoogle, signInWithPassword } from "@/src/lib/auth";
 import { useSession } from "@/src/providers/session-provider";
+import { TextField } from "@/src/ui/text-field";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -110,7 +110,7 @@ export default function LoginScreen() {
             <View className="mt-8 gap-4">
               <View className="gap-2">
                 <Text className="text-sm font-semibold text-ink">Email</Text>
-                <TextInput
+                <TextField
                   autoCapitalize="none"
                   autoComplete="email"
                   keyboardType="email-address"
@@ -118,7 +118,6 @@ export default function LoginScreen() {
                   placeholder="you@example.com"
                   placeholderTextColor="#6b7280"
                   value={email}
-                  className="rounded-2xl border border-black/10 bg-white px-4 py-4 text-base text-ink"
                 />
               </View>
 
@@ -126,7 +125,7 @@ export default function LoginScreen() {
                 <Text className="text-sm font-semibold text-ink">
                   Password
                 </Text>
-                <TextInput
+                <TextField
                   autoCapitalize="none"
                   autoComplete="password"
                   onChangeText={setPassword}
@@ -134,7 +133,6 @@ export default function LoginScreen() {
                   placeholderTextColor="#6b7280"
                   secureTextEntry
                   value={password}
-                  className="rounded-2xl border border-black/10 bg-white px-4 py-4 text-base text-ink"
                 />
               </View>
 
