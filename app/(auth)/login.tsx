@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -94,108 +95,115 @@ export default function LoginScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1 bg-canvas"
       >
-        <View className="flex-1 items-center justify-center px-6 py-10">
-          <View className="w-full max-w-[440px] rounded-[28px] border border-black/5 bg-mist p-6 shadow-card">
-            <View className="gap-3">
-              <Text className="text-xs font-semibold uppercase tracking-[3px] text-primary">
-                Budget Tracking
-              </Text>
-              <Text className="text-4xl font-black leading-tight text-ink">
-                Log in to Gastos
-              </Text>
-              <Text className="text-base leading-6 text-ink/70">
-                Use your existing Supabase auth account to access your budgets,
-                categories, and transactions.
-              </Text>
-            </View>
-
-            <View className="mt-8 gap-4">
-              <View className="gap-2">
-                <Text className="text-sm font-semibold text-ink">Email</Text>
-                <TextField
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  keyboardType="email-address"
-                  onChangeText={setEmail}
-                  placeholder="you@example.com"
-                  placeholderTextColor="#6b7280"
-                  value={email}
-                />
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+        >
+          <View className="flex-1 items-center justify-center px-6 py-10">
+            <View className="w-full max-w-[440px] rounded-[28px] border border-black/5 bg-mist p-6 shadow-card">
+              <View className="gap-3">
+                <Text className="text-xs font-semibold uppercase tracking-[3px] text-primary">
+                  Budget Tracking
+                </Text>
+                <Text className="text-4xl font-black leading-tight text-ink">
+                  Log in to Gastos
+                </Text>
+                <Text className="text-base leading-6 text-ink/70">
+                  Use your existing Supabase auth account to access your budgets,
+                  categories, and transactions.
+                </Text>
               </View>
 
-              <View className="gap-2">
-                <Text className="text-sm font-semibold text-ink">
-                  Password
-                </Text>
-                <View className="relative">
+              <View className="mt-8 gap-4">
+                <View className="gap-2">
+                  <Text className="text-sm font-semibold text-ink">Email</Text>
                   <TextField
                     autoCapitalize="none"
-                    autoComplete="password"
-                    onChangeText={setPassword}
-                    placeholder="Your password"
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    onChangeText={setEmail}
+                    placeholder="you@example.com"
                     placeholderTextColor="#6b7280"
-                    secureTextEntry={!isPasswordVisible}
-                    value={password}
-                    className="pr-12"
+                    value={email}
                   />
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      isPasswordVisible ? "Hide password" : "Show password"
-                    }
-                    hitSlop={8}
-                    onPress={() => setIsPasswordVisible((value) => !value)}
-                    className="absolute bottom-0 right-4 top-0 justify-center"
-                  >
-                    <AntDesign
-                      name={isPasswordVisible ? "eye" : "eye-invisible"}
-                      size={18}
-                      color="#6b7280"
-                    />
-                  </Pressable>
                 </View>
-              </View>
 
-              {errorMessage ? (
-                <Text selectable className="rounded-2xl bg-danger/10 p-4 text-sm text-danger">
-                  {errorMessage}
-                </Text>
-              ) : null}
-
-              <Button
-                disabled={isDisabled}
-                isLoading={isPasswordLoading}
-                onPress={handlePasswordLogin}
-                size="lg"
-                variant="primary"
-                label={isPasswordLoading ? "Signing in..." : "Log in"}
-              />
-
-              <View className="flex-row items-center gap-3">
-                <View className="h-px flex-1 bg-black/10" />
-                <Text className="text-xs font-semibold uppercase tracking-[3px] text-ink/50">
-                  Or
-                </Text>
-                <View className="h-px flex-1 bg-black/10" />
-              </View>
-
-              <Button
-                disabled={isPasswordLoading || isGoogleLoading}
-                isLoading={isGoogleLoading}
-                onPress={handleGoogleLogin}
-                size="lg"
-                variant="outline"
-              >
-                <View className="flex-row items-center justify-center gap-2">
-                  <AntDesign name="google" size={18} color="#4285F4" />
-                  <Text className="text-base font-bold text-ink">
-                    {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
+                <View className="gap-2">
+                  <Text className="text-sm font-semibold text-ink">
+                    Password
                   </Text>
+                  <View className="relative">
+                    <TextField
+                      autoCapitalize="none"
+                      autoComplete="password"
+                      onChangeText={setPassword}
+                      placeholder="Your password"
+                      placeholderTextColor="#6b7280"
+                      secureTextEntry={!isPasswordVisible}
+                      value={password}
+                      className="pr-12"
+                    />
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        isPasswordVisible ? "Hide password" : "Show password"
+                      }
+                      hitSlop={8}
+                      onPress={() => setIsPasswordVisible((value) => !value)}
+                      className="absolute bottom-0 right-4 top-0 justify-center"
+                    >
+                      <AntDesign
+                        name={isPasswordVisible ? "eye" : "eye-invisible"}
+                        size={18}
+                        color="#6b7280"
+                      />
+                    </Pressable>
+                  </View>
                 </View>
-              </Button>
+
+                {errorMessage ? (
+                  <Text selectable className="rounded-2xl bg-danger/10 p-4 text-sm text-danger">
+                    {errorMessage}
+                  </Text>
+                ) : null}
+
+                <Button
+                  disabled={isDisabled}
+                  isLoading={isPasswordLoading}
+                  onPress={handlePasswordLogin}
+                  size="lg"
+                  variant="primary"
+                  label={isPasswordLoading ? "Signing in..." : "Log in"}
+                />
+
+                <View className="flex-row items-center gap-3">
+                  <View className="h-px flex-1 bg-black/10" />
+                  <Text className="text-xs font-semibold uppercase tracking-[3px] text-ink/50">
+                    Or
+                  </Text>
+                  <View className="h-px flex-1 bg-black/10" />
+                </View>
+
+                <Button
+                  disabled={isPasswordLoading || isGoogleLoading}
+                  isLoading={isGoogleLoading}
+                  onPress={handleGoogleLogin}
+                  size="lg"
+                  variant="outline"
+                >
+                  <View className="flex-row items-center justify-center gap-2">
+                    <AntDesign name="google" size={18} color="#4285F4" />
+                    <Text className="text-base font-bold text-ink">
+                      {isGoogleLoading ? "Opening Google..." : "Continue with Google"}
+                    </Text>
+                  </View>
+                </Button>
+              </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </>
   );
