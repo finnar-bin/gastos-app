@@ -38,3 +38,10 @@ Examples:
 
 - If state comes from backend or needs cache/refetch/invalidation: use TanStack Query.
 - If state is UI behavior only and not persisted remotely: use local state, Context, or Zustand.
+
+## `src/lib` Module Boundaries
+
+- Keep Supabase request/actions in `*-requests.ts` files.
+- Keep pure helpers/utilities in `*-utils.ts` files.
+- Utility modules must not import Supabase client modules.
+- Do not combine Supabase calls and helper logic in the same `src/lib` file.

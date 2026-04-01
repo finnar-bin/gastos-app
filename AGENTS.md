@@ -22,6 +22,11 @@ This file defines coding preferences for AI assistants working in this repo.
 - Keep business logic in reusable functions/modules.
 - Keep screen files focused on composition and flow, not duplicated implementation details.
 - Prefer small abstractions with clear names over many ad-hoc inline blocks.
+- In `src/lib`, keep Supabase request/actions separate from helpers/utils.
+- Naming convention:
+- `*-requests.ts` for Supabase I/O (queries, mutations, RPC calls).
+- `*-utils.ts` for pure helpers/sanitizers/formatters with no Supabase calls.
+- Do not mix request code and helper code in the same module.
 
 ## State Management
 
