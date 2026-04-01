@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { signOut } from "@/src/lib/auth-requests";
@@ -7,6 +7,7 @@ import { useUserSheetsQuery } from "@/src/queries/use-user-sheets-query";
 import { Button } from "@/src/ui/button";
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { session } = useSession();
   const userId = session?.user.id;
   const { data: sheets = [], isLoading, error } = useUserSheetsQuery(userId);
@@ -58,20 +59,30 @@ export default function HomeScreen() {
 
         {!isLoading && !error && hasSheets
           ? sheets.map((sheet) => (
-              <View
+              <Button
                 key={sheet.id}
-                className="rounded-[28px] border border-black/5 bg-mist p-6 shadow-card"
+                variant="outline"
+                size="lg"
+                onPress={() =>
+                  router.push({
+                    pathname: "/(app)/sheets/[sheetId]",
+                    params: { sheetId: sheet.id },
+                  })
+                }
+                className="min-h-0 items-start justify-start rounded-[28px] border border-black/5 bg-mist p-6 shadow-card"
               >
-                <Text className="text-xs font-semibold uppercase tracking-[3px] text-primary">
-                  {sheet.role}
-                </Text>
-                <Text className="mt-2 text-xl font-black text-ink">
-                  {sheet.name}
-                </Text>
-                <Text className="mt-2 text-base leading-6 text-ink/70">
-                  {sheet.description?.trim() || "No description yet."}
-                </Text>
-              </View>
+                <View className="w-full">
+                  <Text className="text-xs font-semibold uppercase tracking-[3px] text-primary">
+                    {sheet.role}
+                  </Text>
+                  <Text className="mt-2 text-left text-xl font-black text-ink">
+                    {sheet.name}
+                  </Text>
+                  <Text className="mt-2 text-left text-base leading-6 text-ink/70">
+                    {sheet.description?.trim() || "No description yet."}
+                  </Text>
+                </View>
+              </Button>
             ))
           : null}
 
