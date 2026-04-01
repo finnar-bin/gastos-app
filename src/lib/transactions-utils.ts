@@ -16,6 +16,16 @@ export type MonthlySheetTotals = {
   expenseTotal: number;
 };
 
+export type MonthlyCategoryTotal = {
+  categoryName: string;
+  totalAmount: number;
+};
+
+export type MonthlySheetCategoryTotals = {
+  income: MonthlyCategoryTotal[];
+  expense: MonthlyCategoryTotal[];
+};
+
 export type CreatorProfile = {
   id: string;
   display_name: string | null;
@@ -47,6 +57,19 @@ type MonthlyTransactionRow = {
   type: "income" | "expense";
 };
 
+type MonthlyCategoryTransactionRow = {
+  amount: number | string;
+  type: "income" | "expense";
+  category:
+    | {
+        name: string;
+      }
+    | {
+        name: string;
+      }[]
+    | null;
+};
+
 function toCategory(category: RecentTransactionRow["category"]) {
   if (!category) {
     return { name: null, icon: null };
@@ -65,6 +88,18 @@ function toCategory(category: RecentTransactionRow["category"]) {
 function toAmount(rawAmount: number | string) {
   const parsedAmount = Number(rawAmount);
   return Number.isFinite(parsedAmount) ? parsedAmount : 0;
+}
+
+function toCategoryName(category: MonthlyCategoryTransactionRow["category"]) {
+  if (!category) {
+    return "Uncategorized";
+  }
+
+  if (Array.isArray(category)) {
+    return category[0]?.name?.trim() || "Uncategorized";
+  }
+
+  return category.name?.trim() || "Uncategorized";
 }
 
 export function mapRecentSheetTransactions(
@@ -112,4 +147,40 @@ export function sumMonthlySheetTotals(
     },
     { incomeTotal: 0, expenseTotal: 0 },
   );
+}
+
+export function sumMonthlySheetCategoryTotals(
+  data: unknown[] | null,
+): MonthlySheetCategoryTotals {
+  const rows = (data ?? []) as MonthlyCategoryTransactionRow[];
+  const incomeCategoryTotals = new Map<string, number>();
+  const expenseCategoryTotals = new Map<string, number>();
+
+  rows.forEach((row) => {
+    const amount = toAmount(row.amount);
+    const categoryName = toCategoryName(row.category);
+
+    if (row.type === "income") {
+      incomeCategoryTotals.set(
+        categoryName,
+        (incomeCategoryTotals.get(categoryName) ?? 0) + amount,
+      );
+      return;
+    }
+
+    expenseCategoryTotals.set(
+      categoryName,
+      (expenseCategoryTotals.get(categoryName) ?? 0) + amount,
+    );
+  });
+
+  const toSortedTotals = (source: Map<string, number>) =>
+    Array.from(source.entries())
+      .map(([categoryName, totalAmount]) => ({ categoryName, totalAmount }))
+      .sort((first, second) => second.totalAmount - first.totalAmount);
+
+  return {
+    income: toSortedTotals(incomeCategoryTotals),
+    expense: toSortedTotals(expenseCategoryTotals),
+  };
 }

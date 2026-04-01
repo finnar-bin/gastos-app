@@ -1,6 +1,7 @@
 import {
   mapRecentSheetTransactions,
   type CreatorProfile,
+  sumMonthlySheetCategoryTotals,
   sumMonthlySheetTotals,
 } from "@/src/lib/transactions-utils";
 import { supabase } from "@/src/lib/supabase";
@@ -74,4 +75,25 @@ export async function getCurrentMonthSheetTotals(sheetId: string) {
   }
 
   return sumMonthlySheetTotals((data ?? []) as unknown[]);
+}
+
+export async function getCurrentMonthSheetCategoryTotals(sheetId: string) {
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select(
+      "amount, type, category:categories!transactions_category_id_categories_id_fk(name)",
+    )
+    .eq("sheet_id", sheetId)
+    .gte("date", toDateOnlyValue(monthStart))
+    .lte("date", toDateOnlyValue(monthEnd));
+
+  if (error) {
+    throw error;
+  }
+
+  return sumMonthlySheetCategoryTotals((data ?? []) as unknown[]);
 }
