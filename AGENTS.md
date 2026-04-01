@@ -12,8 +12,8 @@ This file defines coding preferences for AI assistants working in this repo.
 ## UI Development
 
 - Use shared UI primitives from `src/ui` whenever available.
-- For text inputs, use `TextField` from `src/ui/text-field.tsx` instead of raw `TextInput` in app screens.
-- For buttons/actions, use `Button` from `src/ui/button.tsx` and size props for consistency.
+- For text inputs, use `TextField` from `src/ui/TextField.tsx` instead of raw `TextInput` in app screens.
+- For buttons/actions, use `Button` from `src/ui/Button.tsx` and size props for consistency.
 - Keep styling consistent by using primitive-owned defaults, then extend only when needed.
 - Only add platform-specific overrides inside shared primitives, not per-screen.
 
@@ -22,6 +22,9 @@ This file defines coding preferences for AI assistants working in this repo.
 - Keep business logic in reusable functions/modules.
 - Keep screen files focused on composition and flow, not duplicated implementation details.
 - Prefer small abstractions with clear names over many ad-hoc inline blocks.
+- React components must use PascalCase naming (for `function` and `const` component declarations).
+- React component file names must use PascalCase (example: `UserAvatar.tsx`, `TransactionCategoryIcon.tsx`).
+- Exception: Expo Router route files in `app/` must follow route naming requirements and may use non-PascalCase names.
 - Shared reusable helpers should live in `src/utils`.
 - In `src/utils`, use one helper per file.
 - In `src/utils`, do not use a `-utils` filename suffix. Use names like `format-date.ts`, not `format-date-utils.ts`.

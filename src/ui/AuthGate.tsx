@@ -1,7 +1,7 @@
 import { type PropsWithChildren } from "react";
 import { ActivityIndicator, View } from "react-native";
 
-import { useSession } from "@/src/providers/session-provider";
+import { useSession } from "@/src/providers/SessionProvider";
 
 type AuthGateProps = PropsWithChildren<{
 }>;

@@ -2,9 +2,9 @@ import { Stack, useRouter } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { signOut } from "@/src/lib/auth-requests";
-import { useSession } from "@/src/providers/session-provider";
+import { useSession } from "@/src/providers/SessionProvider";
 import { useUserSheetsQuery } from "@/src/queries/use-user-sheets-query";
-import { Button } from "@/src/ui/button";
+import { Button } from "@/src/ui/Button";
 
 export default function HomeScreen() {
   const router = useRouter();

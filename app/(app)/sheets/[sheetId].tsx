@@ -4,13 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { signOut } from "@/src/lib/auth-requests";
 import type { RecentSheetTransaction } from "@/src/lib/transactions-utils";
-import { useSession } from "@/src/providers/session-provider";
+import { useSession } from "@/src/providers/SessionProvider";
 import { useRecentSheetTransactionsQuery } from "@/src/queries/use-recent-sheet-transactions-query";
 import { useSheetCurrencyQuery } from "@/src/queries/use-sheet-currency-query";
 import { useUserSheetsQuery } from "@/src/queries/use-user-sheets-query";
-import { Button } from "@/src/ui/button";
-import { TransactionCategoryIcon } from "@/src/ui/transaction-category-icon";
-import { UserAvatar } from "@/src/ui/user-avatar";
+import { Button } from "@/src/ui/Button";
+import { TransactionCategoryIcon } from "@/src/ui/TransactionCategoryIcon";
+import { UserAvatar } from "@/src/ui/UserAvatar";
 import { formatAmount } from "@/src/utils/format-amount";
 import { formatDate } from "@/src/utils/format-date";
 

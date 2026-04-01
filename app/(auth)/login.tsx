@@ -13,9 +13,9 @@ import {
 
 import { signInWithGoogle, signInWithPassword } from "@/src/lib/auth-requests";
 import { getAuthRedirectUrl } from "@/src/lib/auth-utils";
-import { useSession } from "@/src/providers/session-provider";
-import { Button } from "@/src/ui/button";
-import { TextField } from "@/src/ui/text-field";
+import { useSession } from "@/src/providers/SessionProvider";
+import { Button } from "@/src/ui/Button";
+import { TextField } from "@/src/ui/TextField";
 
 WebBrowser.maybeCompleteAuthSession();
 

@@ -1,7 +1,7 @@
 import { Redirect, Stack } from "expo-router";
 import { ActivityIndicator, Text, View } from "react-native";
 
-import { useSession } from "@/src/providers/session-provider";
+import { useSession } from "@/src/providers/SessionProvider";
 
 export default function AuthCallbackScreen() {
   const { isLoading, session } = useSession();

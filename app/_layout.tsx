@@ -3,8 +3,8 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 
-import { AppProviders } from "@/src/providers/app-providers";
-import { OfflineBanner } from "@/src/ui/offline-banner";
+import { AppProviders } from "@/src/providers/AppProviders";
+import { OfflineBanner } from "@/src/ui/OfflineBanner";
 
 export default function RootLayout() {
   return (
