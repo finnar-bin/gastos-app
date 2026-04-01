@@ -5,6 +5,17 @@ export type RecentSheetTransaction = {
   description: string | null;
   date: string;
   categoryName: string | null;
+  categoryIcon: string | null;
+  creatorName: string | null;
+  creatorAvatarUrl: string | null;
+  creatorEmail: string | null;
+};
+
+export type CreatorProfile = {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  email: string | null;
 };
 
 type RecentTransactionRow = {
@@ -13,26 +24,32 @@ type RecentTransactionRow = {
   type: RecentSheetTransaction["type"];
   description: string | null;
   date: string;
+  created_by: string;
   category:
     | {
         name: string;
+        icon: string;
       }
     | {
         name: string;
+        icon: string;
       }[]
     | null;
 };
 
-function toCategoryName(category: RecentTransactionRow["category"]) {
+function toCategory(category: RecentTransactionRow["category"]) {
   if (!category) {
-    return null;
+    return { name: null, icon: null };
   }
 
   if (Array.isArray(category)) {
-    return category[0]?.name ?? null;
+    return {
+      name: category[0]?.name ?? null,
+      icon: category[0]?.icon ?? null,
+    };
   }
 
-  return category.name;
+  return { name: category.name, icon: category.icon };
 }
 
 function toAmount(rawAmount: number | string) {
@@ -42,11 +59,14 @@ function toAmount(rawAmount: number | string) {
 
 export function mapRecentSheetTransactions(
   data: unknown[] | null,
+  creatorProfilesById: Record<string, CreatorProfile>,
 ): RecentSheetTransaction[] {
   const rows = data ?? [];
 
   return rows.map((row) => {
     const typedRow = row as RecentTransactionRow;
+    const category = toCategory(typedRow.category);
+    const creator = creatorProfilesById[typedRow.created_by];
 
     return {
       id: typedRow.id,
@@ -54,7 +74,11 @@ export function mapRecentSheetTransactions(
       type: typedRow.type,
       description: typedRow.description,
       date: typedRow.date,
-      categoryName: toCategoryName(typedRow.category),
+      categoryName: category.name,
+      categoryIcon: category.icon,
+      creatorName: creator?.display_name ?? null,
+      creatorAvatarUrl: creator?.avatar_url ?? null,
+      creatorEmail: creator?.email ?? null,
     };
   });
 }

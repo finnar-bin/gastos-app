@@ -9,6 +9,8 @@ import { useRecentSheetTransactionsQuery } from "@/src/queries/use-recent-sheet-
 import { useSheetCurrencyQuery } from "@/src/queries/use-sheet-currency-query";
 import { useUserSheetsQuery } from "@/src/queries/use-user-sheets-query";
 import { Button } from "@/src/ui/button";
+import { TransactionCategoryIcon } from "@/src/ui/transaction-category-icon";
+import { UserAvatar } from "@/src/ui/user-avatar";
 import { formatAmount } from "@/src/utils/format-amount";
 import { formatDate } from "@/src/utils/format-date";
 
@@ -30,36 +32,68 @@ function RecentTransactionsSection({
   return (
     <View>
       <View className="flex-row items-center justify-between gap-3">
-        <Text className="text-xl font-black text-ink">Recent Transactions</Text>
+        <Text className="text-xl font-bold text-ink">Recent Transactions</Text>
         <Button size="sm" variant="outline" label="View All" />
       </View>
 
       <View className="mt-5 rounded-2xl border border-black/10 bg-white shadow-card">
-        {transactions.map((transaction) => (
-          <View
-            key={transaction.id}
-            className="flex-row items-center border-b border-black/5 px-4 py-3 last:border-b-0"
-          >
-            <Text className="w-28 text-sm text-ink/70">
-              {formatDate(transaction.date)}
-            </Text>
-            <View className="flex-1">
-              <Text className="text-sm font-semibold text-ink">
-                {transaction.description?.trim() ||
-                  transaction.categoryName ||
-                  "Untitled transaction"}
-              </Text>
-              <Text className="mt-1 text-xs text-ink/60">
-                {transaction.categoryName || "Uncategorized"}
-              </Text>
+        {transactions.map((transaction, index) => (
+          <View key={transaction.id}>
+            <View className="flex-row items-center gap-3 px-4 py-3">
+              <TransactionCategoryIcon
+                icon={transaction.categoryIcon}
+                type={transaction.type}
+              />
+
+              <View className="flex-1">
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  className="text-sm font-semibold text-ink"
+                >
+                  {transaction.description?.trim() ||
+                    transaction.categoryName ||
+                    "Untitled transaction"}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  className="mt-1 text-xs text-ink/60"
+                >
+                  <Text className="capitalize">{transaction.type}</Text> {"\u2022"}{" "}
+                  {formatDate(transaction.date)}
+                </Text>
+
+                <View className="mt-2 flex-row items-center gap-2">
+                  <UserAvatar
+                    size={16}
+                    name={transaction.creatorName}
+                    avatarUrl={transaction.creatorAvatarUrl}
+                    email={transaction.creatorEmail}
+                  />
+                  <Text className="text-xs text-ink/60">
+                    {transaction.creatorName?.trim() ||
+                      transaction.creatorEmail?.trim() ||
+                      "Unknown user"}
+                  </Text>
+                </View>
+              </View>
+
+              <View className="items-end">
+                <Text
+                  className={`text-right text-base font-bold ${
+                    transaction.type === "income" ? "text-primary" : "text-danger"
+                  }`}
+                >
+                  {formatAmount(transaction.amount, transaction.type, currency)}
+                </Text>
+              </View>
             </View>
-            <Text
-              className={`w-28 text-right text-sm font-bold ${
-                transaction.type === "income" ? "text-primary" : "text-danger"
-              }`}
-            >
-              {formatAmount(transaction.amount, transaction.type, currency)}
-            </Text>
+
+            {index < transactions.length - 1 ? (
+              <View className="h-px bg-black/10" />
+            ) : null}
           </View>
         ))}
       </View>
@@ -107,14 +141,23 @@ export default function SheetScreen() {
                 label="Sheet"
                 onPress={() => router.push("/(app)/")}
               />
-              <Button size="sm" variant="ink" label="Sign out" onPress={signOut} />
+              <Button
+                size="sm"
+                variant="ink"
+                label="Sign out"
+                onPress={signOut}
+              />
             </View>
           </View>
         </View>
 
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24, gap: 16 }}
+          contentContainerStyle={{
+            paddingHorizontal: 24,
+            paddingBottom: 24,
+            gap: 16,
+          }}
           className="flex-1"
         >
           {isLoading ? (
