@@ -1,8 +1,16 @@
 import {
   mapRecentSheetTransactions,
   type CreatorProfile,
+  sumMonthlySheetTotals,
 } from "@/src/lib/transactions-utils";
 import { supabase } from "@/src/lib/supabase";
+
+function toDateOnlyValue(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 export async function getRecentSheetTransactions(sheetId: string, limit = 5) {
   const { data, error } = await supabase
@@ -47,4 +55,23 @@ export async function getRecentSheetTransactions(sheetId: string, limit = 5) {
     (data ?? []) as unknown[],
     creatorProfilesById,
   );
+}
+
+export async function getCurrentMonthSheetTotals(sheetId: string) {
+  const today = new Date();
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+  const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("amount, type")
+    .eq("sheet_id", sheetId)
+    .gte("date", toDateOnlyValue(monthStart))
+    .lte("date", toDateOnlyValue(monthEnd));
+
+  if (error) {
+    throw error;
+  }
+
+  return sumMonthlySheetTotals((data ?? []) as unknown[]);
 }

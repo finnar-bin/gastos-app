@@ -11,6 +11,11 @@ export type RecentSheetTransaction = {
   creatorEmail: string | null;
 };
 
+export type MonthlySheetTotals = {
+  incomeTotal: number;
+  expenseTotal: number;
+};
+
 export type CreatorProfile = {
   id: string;
   display_name: string | null;
@@ -35,6 +40,11 @@ type RecentTransactionRow = {
         icon: string;
       }[]
     | null;
+};
+
+type MonthlyTransactionRow = {
+  amount: number | string;
+  type: "income" | "expense";
 };
 
 function toCategory(category: RecentTransactionRow["category"]) {
@@ -81,4 +91,25 @@ export function mapRecentSheetTransactions(
       creatorEmail: creator?.email ?? null,
     };
   });
+}
+
+export function sumMonthlySheetTotals(
+  data: unknown[] | null,
+): MonthlySheetTotals {
+  const rows = (data ?? []) as MonthlyTransactionRow[];
+
+  return rows.reduce<MonthlySheetTotals>(
+    (accumulator, row) => {
+      const amount = toAmount(row.amount);
+
+      if (row.type === "income") {
+        accumulator.incomeTotal += amount;
+        return accumulator;
+      }
+
+      accumulator.expenseTotal += amount;
+      return accumulator;
+    },
+    { incomeTotal: 0, expenseTotal: 0 },
+  );
 }

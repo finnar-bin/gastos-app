@@ -1,11 +1,19 @@
-type TransactionAmountType = "income" | "expense";
+type CurrencyFormatType = "income" | "expense";
 
-export function formatAmount(
+type FormatCurrencyOptions = {
+  type?: CurrencyFormatType;
+};
+
+export function formatCurrency(
   amount: number,
-  type: TransactionAmountType,
   currency: string | null,
+  options?: FormatCurrencyOptions,
 ) {
-  const sign = type === "income" ? "+" : "-";
+  const sign = options?.type
+    ? options.type === "income"
+      ? "+"
+      : "-"
+    : "";
   const absoluteAmount = Math.abs(amount);
 
   if (currency) {
