@@ -1,4 +1,4 @@
-import { AntDesign } from "@expo/vector-icons";
+import { Eye, EyeOff, Globe } from "lucide-react-native";
 import * as WebBrowser from "expo-web-browser";
 import { Redirect, Stack, router } from "expo-router";
 import { useState } from "react";
@@ -145,11 +145,11 @@ export default function LoginScreen() {
                       onPress={() => setIsPasswordVisible((value) => !value)}
                       className="absolute bottom-0 right-4 top-0 justify-center"
                     >
-                      <AntDesign
-                        name={isPasswordVisible ? "eye" : "eye-invisible"}
-                        size={18}
-                        color="#6b7280"
-                      />
+                      {isPasswordVisible ? (
+                        <EyeOff size={18} color="#6b7280" />
+                      ) : (
+                        <Eye size={18} color="#6b7280" />
+                      )}
                     </Pressable>
                   </View>
                 </View>
@@ -187,14 +187,11 @@ export default function LoginScreen() {
                   size="lg"
                   variant="outline"
                 >
-                  <View className="flex-row items-center justify-center gap-2">
-                    <AntDesign name="google" size={18} color="#4285F4" />
-                    <Text className="text-base font-bold text-ink">
-                      {isGoogleLoading
-                        ? "Opening Google..."
-                        : "Continue with Google"}
-                    </Text>
-                  </View>
+                  <Text className="text-base font-bold text-ink">
+                    {isGoogleLoading
+                      ? "Opening Google..."
+                      : "Continue with Google"}
+                  </Text>
                 </Button>
 
                 <Pressable

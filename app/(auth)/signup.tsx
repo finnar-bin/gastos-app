@@ -1,4 +1,4 @@
-import { AntDesign } from "@expo/vector-icons";
+import { Eye, EyeOff } from "lucide-react-native";
 import { Redirect, Stack, router } from "expo-router";
 import { useState } from "react";
 import {
@@ -234,11 +234,11 @@ export default function SignUpScreen() {
                       onPress={() => setIsPasswordVisible((value) => !value)}
                       className="absolute bottom-0 right-4 top-0 justify-center"
                     >
-                      <AntDesign
-                        name={isPasswordVisible ? "eye" : "eye-invisible"}
-                        size={18}
-                        color="#6b7280"
-                      />
+                      {isPasswordVisible ? (
+                        <EyeOff size={18} color="#6b7280" />
+                      ) : (
+                        <Eye size={18} color="#6b7280" />
+                      )}
                     </Pressable>
                   </View>
                   {fieldErrors.password ? (
