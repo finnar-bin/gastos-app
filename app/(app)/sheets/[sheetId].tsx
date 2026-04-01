@@ -49,10 +49,10 @@ function CurrentMonthSummaryCard({
   errorMessage: string | null;
 }) {
   return (
-    <View className="overflow-hidden rounded-[28px] shadow-card">
+    <View className="overflow-hidden rounded-[28px] bg-[#111827] shadow-card">
       <LinearGradient
-        colors={["#0f1319", "#1c2430", "#2f3d4f", "#161d27"]}
-        locations={[0, 0.35, 0.62, 1]}
+        colors={["#06080c", "#1b2432", "#314259", "#101722"]}
+        locations={[0, 0.32, 0.65, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFillObject}
@@ -79,20 +79,20 @@ function CurrentMonthSummaryCard({
 
         {!isLoading && !errorMessage ? (
           <View className="mt-6 flex-row gap-3">
-            <View className="flex-1 rounded-2xl bg-white/10 p-4">
-              <Text className="text-xs font-semibold uppercase tracking-[2px] text-white/65">
+            <View className="flex-1 py-1">
+              <Text className="text-xs font-semibold uppercase tracking-[2px] text-white/75">
                 Income
               </Text>
-              <Text className="mt-2 text-2xl font-black text-primary">
+              <Text className="mt-2 text-xl font-black text-[#7EE6A2]">
                 {formatCurrency(incomeTotal, currency)}
               </Text>
             </View>
 
-            <View className="flex-1 rounded-2xl bg-white/10 p-4">
-              <Text className="text-xs font-semibold uppercase tracking-[2px] text-white/65">
+            <View className="flex-1 py-1">
+              <Text className="text-xs font-semibold uppercase tracking-[2px] text-white/75">
                 Expenses
               </Text>
-              <Text className="mt-2 text-2xl font-black text-danger">
+              <Text className="mt-2 text-xl font-black text-[#FF9A9A]">
                 {formatCurrency(expenseTotal, currency)}
               </Text>
             </View>
