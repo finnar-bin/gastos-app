@@ -28,25 +28,13 @@ function RecentTransactionsSection({
   currency: string | null;
 }) {
   return (
-    <View className="rounded-[28px] border border-black/5 bg-mist p-6 shadow-card">
+    <View>
       <View className="flex-row items-center justify-between gap-3">
         <Text className="text-xl font-black text-ink">Recent Transactions</Text>
         <Button size="sm" variant="outline" label="View All" />
       </View>
 
-      <View className="mt-5 rounded-2xl border border-black/10 bg-white">
-        <View className="flex-row border-b border-black/10 px-4 py-3">
-          <Text className="w-28 text-xs font-semibold uppercase tracking-[2px] text-ink/60">
-            Date
-          </Text>
-          <Text className="flex-1 text-xs font-semibold uppercase tracking-[2px] text-ink/60">
-            Description
-          </Text>
-          <Text className="w-28 text-right text-xs font-semibold uppercase tracking-[2px] text-ink/60">
-            Amount
-          </Text>
-        </View>
-
+      <View className="mt-5 rounded-2xl border border-black/10 bg-white shadow-card">
         {transactions.map((transaction) => (
           <View
             key={transaction.id}
