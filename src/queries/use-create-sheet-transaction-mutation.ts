@@ -26,6 +26,9 @@ export function useCreateSheetTransactionMutation(sheetId: string | null) {
         queryClient.invalidateQueries({
           queryKey: ["current-month-sheet-category-totals", sheetId],
         }),
+        queryClient.invalidateQueries({
+          queryKey: ["sheet-transaction-overview", sheetId],
+        }),
       ]);
     },
   });
