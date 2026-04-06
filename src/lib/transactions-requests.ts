@@ -85,7 +85,7 @@ export async function getCurrentMonthSheetCategoryTotals(sheetId: string) {
   const { data, error } = await supabase
     .from("transactions")
     .select(
-      "amount, type, category:categories!transactions_category_id_categories_id_fk(name)",
+      "amount, type, category_id, category:categories!transactions_category_id_categories_id_fk(name)",
     )
     .eq("sheet_id", sheetId)
     .gte("date", toDateOnlyValue(monthStart))

@@ -43,12 +43,16 @@ const PIE_COLORS = [
   "#0EA5E9",
   "#A16207",
   "#4F46E5",
+  "#16A34A",
+  "#B91C1C",
 ];
 
 const PIE_SIZE = 176;
 const PIE_STROKE_WIDTH = 28;
 const PIE_RADIUS = (PIE_SIZE - PIE_STROKE_WIDTH) / 2;
 const PIE_CIRCUMFERENCE = 2 * Math.PI * PIE_RADIUS;
+const MAX_PIE_SLICES = 10;
+const MAX_TOP_CATEGORY_SLICES = 9;
 
 function CurrentMonthSummaryCard({
   incomeTotal,
@@ -133,7 +137,34 @@ function MonthlyCategoryPieSection({
   isLoading: boolean;
   errorMessage: string | null;
 }) {
-  const totalAmount = chartData.reduce(
+  const normalizedChartData = useMemo(() => {
+    if (chartData.length <= MAX_PIE_SLICES) {
+      return chartData;
+    }
+
+    const sorted = [...chartData].sort(
+      (first, second) => second.totalAmount - first.totalAmount,
+    );
+    const topCategories = sorted.slice(0, MAX_TOP_CATEGORY_SLICES);
+    const othersTotalAmount = sorted
+      .slice(MAX_TOP_CATEGORY_SLICES)
+      .reduce((accumulator, entry) => accumulator + entry.totalAmount, 0);
+
+    if (othersTotalAmount <= 0) {
+      return topCategories;
+    }
+
+    return [
+      ...topCategories,
+      {
+        categoryId: "__others__",
+        categoryName: "Others",
+        totalAmount: othersTotalAmount,
+      },
+    ];
+  }, [chartData]);
+
+  const totalAmount = normalizedChartData.reduce(
     (accumulator, entry) => accumulator + entry.totalAmount,
     0,
   );
@@ -145,7 +176,7 @@ function MonthlyCategoryPieSection({
 
     let progress = 0;
 
-    return chartData.map((entry, index) => {
+    return normalizedChartData.map((entry, index) => {
       const ratio = entry.totalAmount / totalAmount;
       const strokeLength = Math.max(ratio * PIE_CIRCUMFERENCE, 2);
       const dashOffset = -progress * PIE_CIRCUMFERENCE;
@@ -159,7 +190,7 @@ function MonthlyCategoryPieSection({
         ratio,
       };
     });
-  }, [chartData, totalAmount]);
+  }, [normalizedChartData, totalAmount]);
 
   return (
     <View className="rounded-[28px] border border-black/5 bg-white p-5 shadow-card">
@@ -210,7 +241,7 @@ function MonthlyCategoryPieSection({
               />
               {slices.map((slice) => (
                 <Circle
-                  key={slice.categoryName}
+                  key={slice.categoryId}
                   cx={PIE_SIZE / 2}
                   cy={PIE_SIZE / 2}
                   r={PIE_RADIUS}
@@ -238,7 +269,7 @@ function MonthlyCategoryPieSection({
           <View className="mt-5 gap-2">
             {slices.map((slice) => (
               <View
-                key={`${selectedType}-${slice.categoryName}`}
+                key={`${selectedType}-${slice.categoryId}`}
                 className="flex-row items-center justify-between gap-3 rounded-xl bg-mist px-3 py-2"
               >
                 <View className="flex-1 flex-row items-center gap-2">
