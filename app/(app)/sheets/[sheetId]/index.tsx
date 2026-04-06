@@ -230,7 +230,11 @@ function MonthlyCategoryPieSection({
       {!isLoading && !errorMessage && slices.length > 0 ? (
         <View className="mt-5">
           <View className="items-center">
-            <Svg width={PIE_SIZE} height={PIE_SIZE} viewBox={`0 0 ${PIE_SIZE} ${PIE_SIZE}`}>
+            <Svg
+              width={PIE_SIZE}
+              height={PIE_SIZE}
+              viewBox={`0 0 ${PIE_SIZE} ${PIE_SIZE}`}
+            >
               <Circle
                 cx={PIE_SIZE / 2}
                 cy={PIE_SIZE / 2}
@@ -428,35 +432,6 @@ export default function SheetScreen() {
     <>
       <Stack.Screen options={{ title: selectedSheet?.name ?? "Sheet" }} />
       <SafeAreaView edges={["top"]} className="flex-1 bg-canvas">
-        <View className="px-6 pb-3 pt-2">
-          <View className="flex-row items-center justify-between gap-3">
-            <View className="flex-1 gap-3">
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                className="text-xs font-semibold uppercase tracking-[3px] text-primary"
-              >
-                {selectedSheet?.name ?? "Selected Sheet"}
-              </Text>
-              <Text className="text-2xl font-black text-ink">Dashboard</Text>
-            </View>
-            <View className="flex-row items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                label="Sheet"
-                onPress={() => router.push("/(app)/")}
-              />
-              <Button
-                size="sm"
-                variant="ink"
-                label="Sign out"
-                onPress={signOut}
-              />
-            </View>
-          </View>
-        </View>
-
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={{
@@ -466,6 +441,35 @@ export default function SheetScreen() {
           }}
           className="flex-1"
         >
+          <View className="pb-3 pt-2">
+            <View className="flex-row items-center justify-between gap-3">
+              <View className="flex-1 gap-3">
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  className="text-xs font-semibold uppercase tracking-[3px] text-primary"
+                >
+                  {selectedSheet?.name ?? "Selected Sheet"}
+                </Text>
+                <Text className="text-2xl font-black text-ink">Home</Text>
+              </View>
+              <View className="flex-row items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  label="Sheet"
+                  onPress={() => router.push("/(app)/")}
+                />
+                <Button
+                  size="sm"
+                  variant="ink"
+                  label="Sign out"
+                  onPress={signOut}
+                />
+              </View>
+            </View>
+          </View>
+
           <CurrentMonthSummaryCard
             incomeTotal={currentMonthTotals?.incomeTotal ?? 0}
             expenseTotal={currentMonthTotals?.expenseTotal ?? 0}
@@ -485,8 +489,8 @@ export default function SheetScreen() {
             onSelectType={setSelectedPieType}
             chartData={
               selectedPieType === "income"
-                ? currentMonthCategoryTotals?.income ?? []
-                : currentMonthCategoryTotals?.expense ?? []
+                ? (currentMonthCategoryTotals?.income ?? [])
+                : (currentMonthCategoryTotals?.expense ?? [])
             }
             currency={currency}
             isLoading={isMonthCategoryTotalsLoading}
