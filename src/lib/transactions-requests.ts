@@ -1,6 +1,7 @@
 import {
   mapRecentSheetTransactions,
   type CreatorProfile,
+  type RecentSheetTransaction,
   sumMonthlySheetCategoryTotals,
   sumMonthlySheetTotals,
 } from "@/src/lib/transactions-utils";
@@ -52,10 +53,7 @@ export async function getRecentSheetTransactions(sheetId: string, limit = 5) {
     }, {});
   }
 
-  return mapRecentSheetTransactions(
-    (data ?? []) as unknown[],
-    creatorProfilesById,
-  );
+  return mapRecentSheetTransactions((data ?? []) as unknown[], creatorProfilesById);
 }
 
 export async function getCurrentMonthSheetTotals(sheetId: string) {
@@ -96,4 +94,55 @@ export async function getCurrentMonthSheetCategoryTotals(sheetId: string) {
   }
 
   return sumMonthlySheetCategoryTotals((data ?? []) as unknown[]);
+}
+
+export type SheetTransactionOverviewCategory = {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string | null;
+  categoryType: RecentSheetTransaction["type"];
+  budget: number | null;
+  totalAmount: number;
+};
+
+export async function getSheetTransactionOverview(
+  sheetId: string,
+  targetYear: number,
+  targetMonth: number,
+  targetType: RecentSheetTransaction["type"],
+) {
+  const { data, error } = await supabase.rpc("transaction_overview", {
+    target_sheet_id: sheetId,
+    target_year: targetYear,
+    target_month: targetMonth - 1,
+    target_type: targetType,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const rows = (data ?? []) as Array<{
+    category_id: string;
+    category_name: string;
+    category_icon: string | null;
+    category_type: RecentSheetTransaction["type"];
+    budget: number | string | null;
+    total_amount: number | string;
+  }>;
+
+  return rows.map((row) => {
+    const totalAmount = Number(row.total_amount);
+    const budgetAmount =
+      row.budget === null || row.budget === undefined ? null : Number(row.budget);
+
+    return {
+      categoryId: row.category_id,
+      categoryName: row.category_name,
+      categoryIcon: row.category_icon,
+      categoryType: row.category_type,
+      budget: budgetAmount !== null && Number.isFinite(budgetAmount) ? budgetAmount : null,
+      totalAmount: Number.isFinite(totalAmount) ? totalAmount : 0,
+    } satisfies SheetTransactionOverviewCategory;
+  });
 }

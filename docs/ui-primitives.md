@@ -71,6 +71,71 @@ import { Button } from "@/src/ui/button";
 />;
 ```
 
+## Button Groups
+
+- Use `ButtonGroup` from `src/ui/ButtonGroup.tsx` for segmented single-select button controls (for example, `Income` vs `Expense`).
+- Keep selection state in the parent and pass it via `selectedId`.
+- Use `fullWidth` when each option should expand to equal width.
+
+Example:
+
+```tsx
+import { ButtonGroup } from "@/src/ui/ButtonGroup";
+
+<ButtonGroup
+  options={[
+    { id: "expense", label: "Expense" },
+    { id: "income", label: "Income" },
+  ]}
+  selectedId={transactionType}
+  onSelect={setTransactionType}
+  fullWidth
+/>;
+```
+
+## Select
+
+- Use `Select` from `src/ui/Select.tsx` for simple dropdown selection controls.
+- Keep open/close and selected state in the parent (`isOpen`, `onToggle`, `onSelect`).
+- Use for compact option lists like month/year filters.
+
+Example:
+
+```tsx
+import { Select } from "@/src/ui/Select";
+
+<Select
+  label="Month"
+  value={selectedMonthLabel}
+  options={monthOptions}
+  isOpen={openDropdown === "month"}
+  onToggle={() =>
+    setOpenDropdown((current) => (current === "month" ? null : "month"))
+  }
+  onSelect={(nextId) => {
+    setSelectedMonthId(nextId);
+    setOpenDropdown(null);
+  }}
+/>;
+```
+
+## Sheet Header
+
+- Use `SheetHeader` from `src/ui/SheetHeader.tsx` for sheet-scoped pages that need a consistent top header.
+- It renders:
+  - selected sheet name
+  - page title
+  - shared actions (`Sheet`, `Sign out`)
+- Pass the current `sheetId` and the page title.
+
+Example:
+
+```tsx
+import { SheetHeader } from "@/src/ui/SheetHeader";
+
+<SheetHeader sheetId={sheetId} title="Dashboard" />;
+```
+
 ## Autocomplete Inputs
 
 - Use `Autocomplete` from `src/ui/Autocomplete.tsx` for searchable dropdown selection.

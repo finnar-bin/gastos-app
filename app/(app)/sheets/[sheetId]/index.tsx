@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -11,18 +11,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Circle } from "react-native-svg";
 
-import { signOut } from "@/src/lib/auth-requests";
 import type {
   MonthlyCategoryTotal,
   RecentSheetTransaction,
 } from "@/src/lib/transactions-utils";
-import { useSession } from "@/src/providers/SessionProvider";
 import { useCurrentMonthSheetCategoryTotalsQuery } from "@/src/queries/use-current-month-sheet-category-totals-query";
 import { useCurrentMonthSheetTotalsQuery } from "@/src/queries/use-current-month-sheet-totals-query";
 import { useRecentSheetTransactionsQuery } from "@/src/queries/use-recent-sheet-transactions-query";
 import { useSheetCurrencyQuery } from "@/src/queries/use-sheet-currency-query";
-import { useUserSheetsQuery } from "@/src/queries/use-user-sheets-query";
 import { Button } from "@/src/ui/Button";
+import { ButtonGroup } from "@/src/ui/ButtonGroup";
+import { SheetHeader } from "@/src/ui/SheetHeader";
 import { TransactionCategoryIcon } from "@/src/ui/TransactionCategoryIcon";
 import { UserAvatar } from "@/src/ui/UserAvatar";
 import { formatCurrency } from "@/src/utils/format-currency";
@@ -53,6 +52,10 @@ const PIE_RADIUS = (PIE_SIZE - PIE_STROKE_WIDTH) / 2;
 const PIE_CIRCUMFERENCE = 2 * Math.PI * PIE_RADIUS;
 const MAX_PIE_SLICES = 10;
 const MAX_TOP_CATEGORY_SLICES = 9;
+const TRANSACTION_TYPE_BUTTON_OPTIONS = [
+  { id: "expense", label: "Expenses" },
+  { id: "income", label: "Income" },
+] as const;
 
 function CurrentMonthSummaryCard({
   incomeTotal,
@@ -196,24 +199,15 @@ function MonthlyCategoryPieSection({
     <View className="rounded-[28px] border border-black/5 bg-white p-5 shadow-card">
       <View className="flex-row items-center justify-between gap-3">
         <Text className="text-xl font-bold text-ink">Month Breakdown</Text>
-        <View className="flex-row items-center gap-2 rounded-xl border border-black/10 bg-mist p-1">
-          <Button
-            size="sm"
-            variant={selectedType === "income" ? "ink" : "outline"}
-            className="min-h-8 px-3"
-            textClassName="text-xs"
-            label="Income"
-            onPress={() => onSelectType("income")}
-          />
-          <Button
-            size="sm"
-            variant={selectedType === "expense" ? "ink" : "outline"}
-            className="min-h-8 px-3"
-            textClassName="text-xs"
-            label="Expenses"
-            onPress={() => onSelectType("expense")}
-          />
-        </View>
+        <ButtonGroup
+          options={TRANSACTION_TYPE_BUTTON_OPTIONS}
+          selectedId={selectedType}
+          onSelect={onSelectType}
+          size="sm"
+          containerClassName="flex-row items-center gap-2 rounded-xl border border-black/10 bg-mist p-1"
+          buttonClassName="min-h-8 px-3"
+          textClassName="text-xs"
+        />
       </View>
 
       {isLoading ? (
@@ -398,14 +392,8 @@ function RecentTransactionsSection({
 }
 
 export default function SheetScreen() {
-  const router = useRouter();
   const params = useLocalSearchParams<{ sheetId?: string | string[] }>();
   const sheetId = toSheetId(params.sheetId);
-  const { session } = useSession();
-  const userId = session?.user.id;
-
-  const { data: sheets = [] } = useUserSheetsQuery(userId);
-  const selectedSheet = sheets.find((sheet) => sheet.id === sheetId);
 
   const {
     data: currentMonthTotals,
@@ -425,12 +413,12 @@ export default function SheetScreen() {
   } = useRecentSheetTransactionsQuery(sheetId, 5);
   const { data: currency = null } = useSheetCurrencyQuery(sheetId);
   const [selectedPieType, setSelectedPieType] = useState<"income" | "expense">(
-    "income",
+    "expense",
   );
 
   return (
     <>
-      <Stack.Screen options={{ title: selectedSheet?.name ?? "Sheet" }} />
+      <Stack.Screen options={{ title: "Sheet" }} />
       <SafeAreaView edges={["top"]} className="flex-1 bg-canvas">
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -441,34 +429,7 @@ export default function SheetScreen() {
           }}
           className="flex-1"
         >
-          <View className="pb-3 pt-2">
-            <View className="flex-row items-center justify-between gap-3">
-              <View className="flex-1 gap-3">
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  className="text-xs font-semibold uppercase tracking-[3px] text-primary"
-                >
-                  {selectedSheet?.name ?? "Selected Sheet"}
-                </Text>
-                <Text className="text-2xl font-black text-ink">Home</Text>
-              </View>
-              <View className="flex-row items-center gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  label="Sheet"
-                  onPress={() => router.push("/(app)/")}
-                />
-                <Button
-                  size="sm"
-                  variant="ink"
-                  label="Sign out"
-                  onPress={signOut}
-                />
-              </View>
-            </View>
-          </View>
+          <SheetHeader sheetId={sheetId ?? null} title="Home" />
 
           <CurrentMonthSummaryCard
             incomeTotal={currentMonthTotals?.incomeTotal ?? 0}

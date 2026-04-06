@@ -11,12 +11,18 @@ import { useSheetTransactionCategoriesQuery } from "@/src/queries/use-sheet-tran
 import { useToast } from "@/src/providers/ToastProvider";
 import { Autocomplete, type AutocompleteOption } from "@/src/ui/Autocomplete";
 import { Button } from "@/src/ui/Button";
+import { ButtonGroup } from "@/src/ui/ButtonGroup";
 import {
   DatePicker,
   isDateOnlyValue,
   toDateOnlyValue,
 } from "@/src/ui/DatePicker";
 import { TextField } from "@/src/ui/TextField";
+
+const TRANSACTION_TYPE_BUTTON_OPTIONS = [
+  { id: "expense", label: "Expense" },
+  { id: "income", label: "Income" },
+] as const;
 
 type TransactionFormFieldErrors = {
   category?: string;
@@ -260,22 +266,12 @@ export function TransactionForm({
           <Text className="text-sm font-semibold text-ink">
             Transaction Type
           </Text>
-          <View className="flex-row items-center gap-2 rounded-xl border border-black/10 bg-white p-1">
-            <Button
-              size="sm"
-              variant={transactionType === "expense" ? "ink" : "outline"}
-              className="flex-1"
-              label="Expense"
-              onPress={() => setTransactionType("expense")}
-            />
-            <Button
-              size="sm"
-              variant={transactionType === "income" ? "ink" : "outline"}
-              className="flex-1"
-              label="Income"
-              onPress={() => setTransactionType("income")}
-            />
-          </View>
+          <ButtonGroup
+            options={TRANSACTION_TYPE_BUTTON_OPTIONS}
+            selectedId={transactionType}
+            onSelect={setTransactionType}
+            fullWidth
+          />
         </View>
 
         <Autocomplete
