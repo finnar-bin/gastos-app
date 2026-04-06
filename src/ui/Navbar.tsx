@@ -4,7 +4,12 @@ import {
   Plus,
   Settings,
 } from "lucide-react-native";
-import { useRouter, type Href, useLocalSearchParams } from "expo-router";
+import {
+  useLocalSearchParams,
+  usePathname,
+  useRouter,
+  type Href,
+} from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -31,6 +36,7 @@ const NAV_ITEMS = [
 ] as const;
 
 export const SHEETS_FLOATING_NAV_CONTENT_PADDING = 92;
+const ACTIVE_NAV_COLOR = "#0F766E";
 
 function toSheetId(sheetIdParam: string | string[] | undefined) {
   if (Array.isArray(sheetIdParam)) {
@@ -40,8 +46,25 @@ function toSheetId(sheetIdParam: string | string[] | undefined) {
   return sheetIdParam ?? null;
 }
 
+function isNavItemActive(key: (typeof NAV_ITEMS)[number]["key"], currentPathname: string) {
+  if (key === "dashboard") {
+    return /\/dashboard\/?$/.test(currentPathname);
+  }
+
+  if (key === "settings") {
+    return /\/settings\/?$/.test(currentPathname);
+  }
+
+  if (key === "home") {
+    return /\/sheets\/[^/]+\/?$/.test(currentPathname);
+  }
+
+  return false;
+}
+
 export function Navbar() {
   const router = useRouter();
+  const currentPathname = usePathname();
   const params = useLocalSearchParams<{ sheetId?: string | string[] }>();
   const sheetId = toSheetId(params.sheetId);
   const insets = useSafeAreaInsets();
@@ -53,11 +76,12 @@ export function Navbar() {
         style={{ paddingBottom: insets.bottom + 8 }}
       >
         <View className="flex-row items-end justify-between gap-2">
-          {NAV_ITEMS.map(({ key, label, icon: Icon, pathname }) => {
+          {NAV_ITEMS.map(({ key, label, icon: Icon, pathname: itemPathname }) => {
             const isAddItem = key === "add";
-            const onPress = !isAddItem && pathname && sheetId
+            const isActive = isNavItemActive(key, currentPathname);
+            const onPress = !isAddItem && itemPathname && sheetId
               ? () => {
-                  router.replace({ pathname, params: { sheetId } } as Href);
+                  router.replace({ pathname: itemPathname, params: { sheetId } } as Href);
                 }
               : undefined;
 
@@ -74,14 +98,19 @@ export function Navbar() {
                   </View>
                 ) : (
                   <View className="h-10 w-10 items-center justify-center rounded-2xl bg-transparent">
-                    <Icon size={20} color="#182126" strokeWidth={2.2} />
+                    <Icon
+                      size={20}
+                      color={isActive ? ACTIVE_NAV_COLOR : "#182126"}
+                      strokeWidth={2.2}
+                    />
                   </View>
                 )}
 
                 {!isAddItem ? (
                   <Text
                     numberOfLines={1}
-                    className="text-[11px] font-semibold text-ink/70"
+                    className={`text-[11px] ${isActive ? "font-extrabold" : "font-semibold text-ink/70"}`}
+                    style={isActive ? { color: ACTIVE_NAV_COLOR } : undefined}
                   >
                     {label}
                   </Text>
