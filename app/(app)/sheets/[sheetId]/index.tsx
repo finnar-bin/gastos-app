@@ -27,14 +27,7 @@ import { TransactionCategoryIcon } from "@/src/ui/TransactionCategoryIcon";
 import { UserAvatar } from "@/src/ui/UserAvatar";
 import { formatCurrency } from "@/src/utils/format-currency";
 import { formatDate } from "@/src/utils/format-date";
-
-function toSheetId(sheetIdParam: string | string[] | undefined) {
-  if (Array.isArray(sheetIdParam)) {
-    return sheetIdParam[0];
-  }
-
-  return sheetIdParam;
-}
+import { toSheetId } from "@/src/utils/to-sheet-id";
 
 const MONTH_YEAR_FORMATTER = new Intl.DateTimeFormat("en-US", {
   month: "long",

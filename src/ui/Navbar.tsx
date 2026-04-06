@@ -12,6 +12,7 @@ import {
 } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { toSheetId } from "@/src/utils/to-sheet-id";
 
 const NAV_ITEMS = [
   {
@@ -32,19 +33,16 @@ const NAV_ITEMS = [
     icon: Settings,
     pathname: "/(app)/sheets/[sheetId]/settings",
   },
-  { key: "add", label: "Add", icon: Plus, pathname: null },
+  {
+    key: "add",
+    label: "Add",
+    icon: Plus,
+    pathname: "/(app)/sheets/[sheetId]/transaction-form",
+  },
 ] as const;
 
 export const SHEETS_FLOATING_NAV_CONTENT_PADDING = 92;
 const ACTIVE_NAV_COLOR = "#0F766E";
-
-function toSheetId(sheetIdParam: string | string[] | undefined) {
-  if (Array.isArray(sheetIdParam)) {
-    return sheetIdParam[0] ?? null;
-  }
-
-  return sheetIdParam ?? null;
-}
 
 function isNavItemActive(key: (typeof NAV_ITEMS)[number]["key"], currentPathname: string) {
   if (key === "dashboard") {
@@ -57,6 +55,10 @@ function isNavItemActive(key: (typeof NAV_ITEMS)[number]["key"], currentPathname
 
   if (key === "home") {
     return /\/sheets\/[^/]+\/?$/.test(currentPathname);
+  }
+
+  if (key === "add") {
+    return /\/transaction-form\/?$/.test(currentPathname);
   }
 
   return false;
@@ -79,9 +81,15 @@ export function Navbar() {
           {NAV_ITEMS.map(({ key, label, icon: Icon, pathname: itemPathname }) => {
             const isAddItem = key === "add";
             const isActive = isNavItemActive(key, currentPathname);
-            const onPress = !isAddItem && itemPathname && sheetId
+            const onPress = itemPathname && sheetId
               ? () => {
-                  router.replace({ pathname: itemPathname, params: { sheetId } } as Href);
+                  const nextRoute = { pathname: itemPathname, params: { sheetId } } as Href;
+                  if (isAddItem) {
+                    router.push(nextRoute);
+                    return;
+                  }
+
+                  router.replace(nextRoute);
                 }
               : undefined;
 

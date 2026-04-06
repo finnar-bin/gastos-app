@@ -3,18 +3,11 @@ import { ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { SheetPagePlaceholder } from "@/src/ui/SheetPagePlaceholder";
-
-function toSheetId(sheetIdParam: string | string[] | undefined) {
-  if (Array.isArray(sheetIdParam)) {
-    return sheetIdParam[0] ?? null;
-  }
-
-  return sheetIdParam ?? null;
-}
+import { toSheetId } from "@/src/utils/to-sheet-id";
 
 export default function SheetDashboardPage() {
   const params = useLocalSearchParams<{ sheetId?: string | string[] }>();
-  const sheetId = toSheetId(params.sheetId);
+  const sheetId = toSheetId(params.sheetId) ?? null;
 
   return (
     <>

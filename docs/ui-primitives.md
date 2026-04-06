@@ -70,3 +70,73 @@ import { Button } from "@/src/ui/button";
   onPress={handleSave}
 />;
 ```
+
+## Autocomplete Inputs
+
+- Use `Autocomplete` from `src/ui/Autocomplete.tsx` for searchable dropdown selection.
+- Keep option fetching outside the primitive (for example with TanStack Query) and pass options in as props.
+- Use `selectedOptionId` + `value` to support both selected state and search text.
+- Show validation messages through `errorMessage`.
+
+Example:
+
+```tsx
+import { Autocomplete } from "@/src/ui/Autocomplete";
+
+<Autocomplete
+  label="Category"
+  placeholder="Search category"
+  value={categorySearchValue}
+  selectedOptionId={categoryId}
+  options={categoryOptions}
+  onChangeValue={setCategorySearchValue}
+  onSelectOption={(option) => {
+    setCategoryId(option.id);
+    setCategorySearchValue(option.label);
+  }}
+  emptyMessage="No matching categories"
+/>;
+```
+
+## Date Inputs
+
+- Use `DatePicker` from `src/ui/DatePicker.tsx` for native date selection.
+- Keep storage values as `YYYY-MM-DD`; display values are formatted for readability.
+- Reuse exported helpers from the same module:
+  - `toDateOnlyValue`
+  - `isDateOnlyValue`
+  - `toDateFromDateOnlyValue`
+  - `formatDateOnlyForDisplay`
+
+Example:
+
+```tsx
+import { DatePicker } from "@/src/ui/DatePicker";
+
+<DatePicker
+  label="Date"
+  value={date}
+  onChangeValue={setDate}
+  errorMessage={fieldErrors.date}
+/>;
+```
+
+## Toast Notifications
+
+- Use the `ToastProvider` from `src/providers/ToastProvider.tsx` at app root for global stackable toasts.
+- Use `useToast()` to trigger notifications from any screen/component.
+- Supported toast types:
+  - `success` (primary background)
+  - `error` (danger background)
+- Default auto-dismiss duration is `1000` ms; override using `durationMs`.
+
+Example:
+
+```tsx
+import { useToast } from "@/src/providers/ToastProvider";
+
+const { showToast } = useToast();
+
+showToast({ message: "Saved.", type: "success" });
+showToast({ message: "Failed.", type: "error", durationMs: 2000 });
+```
